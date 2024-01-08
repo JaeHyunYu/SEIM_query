@@ -51,7 +51,7 @@ CASE(
  status xxx, "탐지",
 ...
 )
-'comment(status 코드 값을 기준으로 바이러스 탐지, 치료 중, 치료불가, 치료완료 판별)'
+'comment(Check Detection, In treatment, Completed,.. by status code val)'
 
 
 | eval 정오탐 =
@@ -61,13 +61,13 @@ match(name,"예외처리바이러스명2"),"예외처리",
 match(file_hash,"예외처리바이러스해시값"),"예외처리",
 ...
 )
-'comment(예외처리 virus들을 이름 및 파일 해시값을 기준으로 판별)'
+'comment(Handling Exception lists by virus name, hash val)'
 
 
 
 | table 상태, 탐지시각, IP, 정오탐, 바이러스명, 경로
 } dedup 탐지시각
-'comment(겹치는 로그 제외)'
+'comment(Except duplicate time logs)'
 
 
 | appendpip [stats count | eval ip=" " | where count==0 | fields - count]
