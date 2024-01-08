@@ -1,0 +1,18 @@
+'comment(SPL)'
+
+'comment(비관리노드)'
+
+index="nac" "*비관리노드*"
+'comment(로그에서 문자열을 기준으로 추출)'
+
+search NOT ip="x.x.x.x"
+'comment(확인된 특정IP 장비(프린터, 네트워크 장비, ...)들 예외처리 진행)'
+search NOT MAC="x.x.x.x.x.x"
+'comment(확인된 특정IP 장비(프린터, 네트워크 장비, ...)들 예외처리 진행)'
+
+rex field = sensor "\((?<output>.+)\)"
+'comment(sensor sourcetype 중, ()사이에 있으며, .으로 이루어진 필드 output이라는 이름으로 추출)
+rex field = ouput "^(?<sensor_ab>\d{1,3}+\.\d{1,3})"
+'comment(추출한 output에서 a,b클래스 ip만 추출)
+
+
