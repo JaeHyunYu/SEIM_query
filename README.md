@@ -76,17 +76,18 @@ match(file_hash,"예외처리바이러스해시값"),"예외처리",
 
 # Running Status query
 ```
-index="확인할 장비명"
+index="Equipment to check"
 | stats dc(_time) as stauses by host
 | eval changed(statuses>1,"ON","OFF")
 | table changed
-'comment(로그의 시간값을 기준으로 장비가동상태 확인)'
+'comment(Check running status based on time section)'
 
-index="확인할 장비명"
+index="Equipment to check"
 | stats by sourcetype
 | stats count
 | eval changed(count>1,"ON","확인필요")
 | table changed
-'comment(sourcetype을 기준으로 1종류만 나올 시, 확인요청)'
-'comment(바이러스 연동서버가 주기적으로 syslog sourcetype만 전송하는 문제 식별 / 악성코드 감염정보, 관리자 이벤트 등의 로그도 출력되야함)'
+'comment(If there is only 1 sourcetype from log, Check)
+'comment(Identify the problem that the virus-linked server periodically transmits only the syslog source type 
+/ Logs such as malware infection information and administrator events must also be output.)'
 ```
