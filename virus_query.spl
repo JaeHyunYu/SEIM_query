@@ -1,7 +1,28 @@
+index="virus"
+
+| eval status=
+CASE(
+ status xxx, "치료완료",
+ status xxx, "치료불가",
+ status xxx, "치료 중",
+ status xxx, "탐지",
+...
+)
+
+| eval 정오탐 =
+CASE(
+match(name,"예외처리바이러스명"),"예외처리",
+match(name,"예외처리바이러스명2"),"예외처리",
+...
+)
 
 'comment(status 코드 값을 기준으로 바이러스 탐지, 치료 중, 치료불가, 치료완료 판별)'
 
-table 상태, 탐지시각, IP, 정오탐, 바이러스명, 경로
-dedup 탐지시각
+
+| table 상태, 탐지시각, IP, 정오탐, 바이러스명, 경로
+} dedup 탐지시각
 'comment(겹치는 로그 제외)'
 'comment(예외처리 virus들을 이름을 기준으로 판별)'
+
+| appendpip [stats count | eval ip=" " | where count==0 | fields - count]
+'comment(출력이 0일때 표 표시를 위한 구문)'
