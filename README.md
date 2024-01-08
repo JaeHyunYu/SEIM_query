@@ -1,7 +1,7 @@
-# SEIM_query
+# SEIM_Query <img src="https://img.shields.io/badge/SIEM-Security_Information_Event_Management-blue"/> <img src="https://img.shields.io/badge/splunk-000000.svg" /> 
 Splunk siem query collection
 
-# NAC query
+# NAC Query <img src="https://img.shields.io/badge/NAC-Network_Access_Control-green"/> <img src="https://img.shields.io/badge/genian-000000.svg" />
 ```
 'comment(Unmanaged Node)'
 
@@ -39,7 +39,7 @@ index="nac" "*비관리노드*"
 'comment(unmanged/no lan equip, unmanged SW -> Extract by specific String)'
 ```
 
-# AntiVirus query
+# AntiVirus Query <img src="https://img.shields.io/badge/Virus_Management-Anti_Virus-%23ba8cde"/> <img src="https://img.shields.io/badge/ahnlab-000000.svg" />
 ```
 index="virus"
 
@@ -74,7 +74,9 @@ match(file_hash,"예외처리바이러스해시값"),"예외처리",
 ```
 
 
-# Running Status query
+# UTM Query <img src="https://img.shields.io/badge/UTM-Unified_Threat_Management-%2311faf2"/> <img src="https://img.shields.io/badge/ahnlab-000000.svg" />
+
+# Running Status Query
 ```
 index="Equipment to check"
 | stats dc(_time) as stauses by host
