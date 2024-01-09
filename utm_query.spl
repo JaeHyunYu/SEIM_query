@@ -21,23 +21,39 @@
 
 index IN (UTM) sourcetype IN (*allow*)
 'comment(utm log 중 allow/허용 로그만 확인)'
+'comment(Check allow logs)'
 | eval 탐지시각 = strftime(_time,"%Y/%m/%d %H:%M:%S")
 | stats sum(sent_data) as sd, sum(rcvd_data) as rd by src_ip, dest_ip, protocol, dest_port, 탐지시각
 'comment(전송된 data, 받은 data를 src_ip, dest_ip, protocol, dest_port, 탐지시각을 기준으로 추출)'
+'comment(Extract Sent Data, Received Data based on src_ip, dest_ip, protocol, dest_port, time)'
 | rex field = src_ip "^(<srcrange>\d+\.\d|\.)"
 | rex field = dest_ip "^(<destrange>\d+\.\d|\.)"
 'comment(출발지 대역과 목적지 대역(2번째 대역)까지 추출)'
 | where srcrange != destrange
 'comment(출발지 대역과 목적지 대역이 동일한 경우 제외)'
+'comment(Extract src_ip /dest ip band and exept same band)'
 | eval sd_M=round(sd/1,2), rd_M=round(rd/1,2)
 'comment(가시성을 위하여 round 함수 사용(round 함수 : 소수점 제거 및 반올림 함수))'
 | eval sd_M=sd_M/1000000, rd_M=rd_M/1000000
 'comment(전송 데이터가 bit단위임으로 Mega로 전환 )'
+'comment(chagne bit to mega)'
 | eval traffic=sd_M+rd_M
 | where sd_M > 100
 'comment(전송 데이터가 ??M 이상일때 표시)'
+'comment(Extract when sent_data is more then ??)'
 | table 탐지시각, src_ip, dest_ip, rd_M, sd_M, traffic
-| appendpipe [stats count | eval ip=" "| where count==0 | fields - count \
+| appendpipe [stats count | eval ip=" "| where count==0 | fields - count ]
 
 
-'comment(관리자 로그인 확인/ Admin login ip)'
+'comment(관리자 로그인 확인/ Admin connection ip)'
+
+index = UTM "*ADMIN*" host=x.x.x.x
+'comment(문자열로 admin 접속 로그 확인)'
+'comment(Extract log based on string(ADMIN))'
+| eval 탐지시각 = strftime(_time,"%Y/%m/%d %H:%M:%S")
+| rename src_ip as 접속지
+| dedup 접속지
+'comment(접속IP 중복제거)'
+'comment(Remove duplicate connection ip)'
+| table 접속지, 탐지시각
+| appendpipe [stats count | eval ip=" "| where count==0 | fields - count ]
