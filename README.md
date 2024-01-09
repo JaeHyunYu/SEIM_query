@@ -8,7 +8,6 @@ Splunk siem query collection
 
 
 # NAC Query <img src="https://img.shields.io/badge/NAC-Network_Access_Control-green"/> <img src="https://img.shields.io/badge/genian-000000.svg" />
-## nac-query
 ```
 'comment(Unmanaged Node)'
 
@@ -82,7 +81,6 @@ match(file_hash,"예외처리바이러스해시값"),"예외처리",
 
 
 # UTM Query <img src="https://img.shields.io/badge/UTM-Unified_Threat_Management-%2311faf2"/> <img src="https://img.shields.io/badge/ahnlab-000000.svg" />
-## utm-query
 ```
 'comment(Scan Detection)'
 
