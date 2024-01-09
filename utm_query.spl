@@ -18,16 +18,24 @@
 
 
 'comment(자료유출 탐지 / Data Leak Detection)'
+
 index IN (UTM) sourcetype IN (*allow*)
+'comment(utm log 중 allow/허용 로그만 확인)'
 | eval 탐지시각 = strftime(_time,"%Y/%m/%d %H:%M:%S")
 | stats sum(sent_data) as sd, sum(rcvd_data) as rd by src_ip, dest_ip, protocol, dest_port, 탐지시각
+'comment(전송된 data, 받은 data를 src_ip, dest_ip, protocol, dest_port, 탐지시각을 기준으로 추출)'
 | rex field = src_ip "^(<srcrange>\d+\.\d|\.)"
 | rex field = dest_ip "^(<destrange>\d+\.\d|\.)"
+'comment(출발지 대역과 목적지 대역(2번째 대역)까지 추출)'
 | where srcrange != destrange
-| eval sd_M=round(ds/1,2), rd_M=round(rd/1,2)
+'comment(출발지 대역과 목적지 대역이 동일한 경우 제외)'
+| eval sd_M=round(sd/1,2), rd_M=round(rd/1,2)
+'comment(가시성을 위하여 round 함수 사용(round 함수 : 소수점 제거 및 반올림 함수))'
 | eval sd_M=sd_M/1000000, rd_M=rd_M/1000000
+'comment(전송 데이터가 bit단위임으로 Mega로 전환 )'
 | eval traffic=sd_M+rd_M
 | where sd_M > 100
+'comment(전송 데이터가 ??M 이상일때 표시)'
 | table 탐지시각, src_ip, dest_ip, rd_M, sd_M, traffic
 | appendpipe [stats count | eval ip=" "| where count==0 | fields - count \
 
