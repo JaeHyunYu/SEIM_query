@@ -1,0 +1,8 @@
+'comment(내부스캔탐지)'
+| tstats c where index IN (roka_utm) by src_ip, dest_ip, dest_port
+| rex field = src_ip "^(?<s_ip_abc>\d{1,3}+\.\d{1,3}+\.\d{1,3})"
+| rex field = dest_ip "^(?<d_ip_abc>\d{1,3}+\.\d{1,3}+\.\d{1,3})"
+| stats c dc(dest_ip) as dc_dip dc(dest_port) as dc_port values(dest_port) by src_ip d_ip abc
+| where dc_dip >100 AND dc_port <2
+'comment("dip,port 선택")
+|table src_ip, d_ip_abc, dc_dip, dc_port
