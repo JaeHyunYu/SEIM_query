@@ -14,3 +14,22 @@
 'comment(목적지 IP가 ??개 이상, 목적지 PORT가 ?개 미만인 것 검색)'
 'comment(Search for destination IPs with more than ?? and destination PORTs with less than ??)'
 |table src_ip, d_ip_abc, dc_dip, dc_port
+
+
+
+'comment(자료유출 탐지 / Data Leak Detection)'
+index IN (UTM) sourcetype IN (*allow*)
+| eval 탐지시각 = strftime(_time,"%Y/%m/%d %H:%M:%S")
+| stats sum(sent_data) as sd, sum(rcvd_data) as rd by src_ip, dest_ip, protocol, dest_port, 탐지시각
+| rex field = src_ip "^(<srcrange>\d+\.\d|\.)"
+| rex field = dest_ip "^(<destrange>\d+\.\d|\.)"
+| where srcrange != destrange
+| eval sd_M=round(ds/1,2), rd_M=round(rd/1,2)
+| eval sd_M=sd_M/1000000, rd_M=rd_M/1000000
+| eval traffic=sd_M+rd_M
+| where sd_M > 100
+| table 탐지시각, src_ip, dest_ip, rd_M, sd_M, traffic
+| appendpipe [stats count | eval ip=" "| where count==0 | fields - count \
+
+
+'comment(관리자 로그인 확인/ Admin login ip)'
