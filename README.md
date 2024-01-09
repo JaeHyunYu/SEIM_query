@@ -126,6 +126,14 @@ index = UTM "*ADMIN*" host=x.x.x.x
 | appendpipe [stats count | eval ip=" "| where count==0 | fields - count ]
 ```
 
+'comment(트래픽 분석/ Traffic Analysis)'
+
+| tstats count where index=UTM host=x.x.x.x by _time, sourcetype
+| timechart sum(count) by sourcetype
+'comment(time chart를 이용하여 utm traffic sourcetype(allow,deny) 시각화)'
+'comment(visualization utm traffic(allow, deny) using by time chart )
+
+
 # Running Status Query
 ```
 index="Equipment to check"
