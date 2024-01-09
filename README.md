@@ -3,8 +3,8 @@ Splunk siem query collection
 
 [NAC query](#nac-query)
 [UTM query](#utm-query)
-[AntiVirus query]
-[Running Status query]
+[AntiVirus query](#antivirus-query)
+[Running Status query](#running-status-query)
 
 
 # NAC Query <img src="https://img.shields.io/badge/NAC-Network_Access_Control-green"/> <img src="https://img.shields.io/badge/genian-000000.svg" />
